@@ -1,0 +1,13 @@
+main1: main.cxx	cCollider.o cParticle.o MyVector3.o
+
+	g++ main.cxx	cCollider.o cParticle.o MyVector3.o  -o 2222
+
+cCollider.o: cCollider.cpp cCollider.h cParticle.o
+
+	g++ -c cCollider.cpp -o cCollider.o
+
+cParticle.o: cParticle.cpp cParticle.h MyVector3.o
+	g++ -c cParticle.cpp -o cParticle.o
+	
+MyVector3.o: MyVector3.cpp MyVector3.h
+	g++ -c MyVector3.cpp -o MyVector3.o

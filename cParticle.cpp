@@ -44,8 +44,8 @@ bool cParticle::show () {
 */	 	
 		cout << __FILE__ << "   "<< _FUNC_ << endl;
 		
-		cout << "m_mass = " << m_mass; IF_ERROR_SHOW_(m_mass, "m_mass")
-		cout << "m_radii_ = " << m_radii; IF_ERROR_SHOW_(m_radii, "m_radii_")
+		cout << "m_mass = " << m_mass << endl;		// IF_ERROR_SHOW_(m_mass, "m_mass")
+		cout << "m_radii_ = " << m_radii << endl;	// IF_ERROR_SHOW_(m_radii, "m_radii_")
 
 		cout << "m_coordin X = " << m_coordin.X () << endl;
 		cout << "m_coordin Y = " << m_coordin.Y () << endl;
@@ -69,7 +69,7 @@ bool cParticle::Ok () {
 }
 
 //==============================
-TVector3 cParticle::return_coordin () {
+cMyVector3 cParticle::return_coordin () {
 #ifdef USE_SUPER_PUPER_GUARDS	
 	_ASSERT_OK_()
 #endif
@@ -78,7 +78,7 @@ TVector3 cParticle::return_coordin () {
 }
 
 //==============================
-TVector3 cParticle::return_speed () {
+cMyVector3 cParticle::return_speed () {
 #ifdef USE_SUPER_PUPER_GUARDS	
 	_ASSERT_OK_()
 #endif
@@ -104,7 +104,7 @@ double cParticle::return_radii () {
 }
 
 //==============================
-void cParticle::change_coordin (TVector3 new_coordin) {
+void cParticle::change_coordin (cMyVector3 new_coordin) {
 #ifdef USE_SUPER_PUPER_GUARDS	
 	_ASSERT_OK_()
 #endif
@@ -117,7 +117,7 @@ void cParticle::change_coordin (TVector3 new_coordin) {
 }
 
 //==============================
-void cParticle::change_speed (TVector3 new_speed) {
+void cParticle::change_speed (cMyVector3 new_speed) {
 #ifdef USE_SUPER_PUPER_GUARDS	
 	_ASSERT_OK_()
 #endif

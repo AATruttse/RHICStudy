@@ -1,11 +1,13 @@
 #include <iostream>
 #include <assert.h>
+#include <cmath>
+#include <cerrno>
 #include "cCollider.h"
 #include "const_def_cPartic.h"
-#include <cerrno> 
+ 
 using std::cout;
 using std::endl;
-
+using std::abs;
 //==============================
 /*
 cCollider::cCollider (cParticle particle_) {
@@ -17,18 +19,15 @@ cCollider::cCollider (cParticle particle_) {
 }
 */
 //==============================
-cCollider::cCollider  (int N_, part_param param_, int pointer_) {
-	
+cCollider::cCollider  (int N_, part_param *param_, int pointer_) {
+		m_counter = 0;
+		m_part.resize (10);
 	for (int i = pointer_; i < N_; i++) {
-		//111111111111111111111111111111111
-			m_part [i] = new cParticle (param_.x, param_.y, param_.z, param_.mass, param_.radii, param_.px, param_.py, param_.pz);
-		//2222222222222222222222222222222
-			m_part.push_back(new cParticle (param_.x, param_.y, param_.z, param_.mass, param_.radii, param_.px, param_.py, param_.pz));
-		//3333333333333333333333333333333
-			m_part.resize (10);
-			m_part [i] = new cParticle (param_.x, param_.y, param_.z, param_.mass, param_.radii, param_.px, param_.py, param_.pz);
-		//==============================
-		m_counter = i;
+	
+		m_part [i] = new cParticle (param_[i].x, param_[i].y, param_[i].z, param_[i].mass, param_[i].radii, param_[i].px, param_[i].py, param_[i].pz);
+		m_counter++;
+		cout << "i = " << i << endl;
+		
 	}
 	m_time = 0;
 } 
@@ -44,11 +43,11 @@ cCollider::~cCollider () {
 //==============================
 bool cCollider::show () {
 	
-	cout << "m_counter" << m_counter; IF_ERROR_SHOW_( m_counter,  "m_counter")
-	cout << "m_time" << m_time; IF_ERROR_SHOW_( m_time,  "m_time")
+	cout << "m_counter = " << m_counter << endl;  //IF_ERROR_SHOW_( m_counter,  "m_counter")
+	cout << "m_time = " << m_time << endl; 				//IF_ERROR_SHOW_( m_time,  "m_time")
 	
-	for (int i = 0; i <= m_counter; i++ ) {
-		m_part [0]->show ();
+	for (int i = 0; i < m_counter; i++ ) {
+		m_part [i]->show ();
 	}
 }
 
@@ -59,7 +58,7 @@ bool cCollider::Ok () {
 	IF_ERROR_SHOW_( m_time,  "m_time")
 	
 	for (int i = 0; i <= m_counter; i++ ) {
-		m_part [0]->Ok ();
+		m_part [i]->Ok ();
 	}
 }
 
@@ -73,22 +72,22 @@ rezalt_collider cCollider::collision (rezalt_collider rezalt_) {
 			return rezalt_;
 		}
 		
-		TVector3 dist1;
-		TVector3 dist2;
+		cMyVector3 dist1;
+		cMyVector3 dist2;
 		
 		for (int i = 0; i < m_counter; i++) {
 			for (int j = (i + 1); j <= m_counter; j++ ) {
 				dist1 =	m_part [i]->return_coordin ();
 				dist2 = m_part [j]->return_coordin ();
-				if ((m_part [i]->return_radii () + m_part [j]->return_radii ()) < (TMath::Abs (dist1.X() - dist2.X()))) {
+				if ((m_part [i]->return_radii () + m_part [j]->return_radii ()) < (abs (dist1.X() - dist2.X()))) {
 						errno = 0;
 						return creat_rezalt_of_collid (rezalt_,i, j);
 				}
-				if ((m_part [i]->return_radii () + m_part [j]->return_radii ()) < TMath::Abs (dist1.Y() - dist2.Y())) {
+				if ((m_part [i]->return_radii () + m_part [j]->return_radii ()) < (abs (dist1.Y() - dist2.Y()))) {
 						errno = 0;
 						return creat_rezalt_of_collid (rezalt_,i, j);
 				}
-				if ((m_part [i]->return_radii () + m_part [j]->return_radii ()) < TMath::Abs (dist1.Z() - dist2.Z())) {
+				if ((m_part [i]->return_radii () + m_part [j]->return_radii ()) < (abs (dist1.Z() - dist2.Z()))) {
 						errno = 0;
 						return creat_rezalt_of_collid (rezalt_,i, j);
 				}
@@ -104,7 +103,7 @@ rezalt_collider cCollider::creat_rezalt_of_collid (rezalt_collider rezalt_, int 
 	
 	/*
 	 * mast to do 
-	 * maybe it will do by Stepan ???
+	 * 
 		*/
 	return rezalt_;
 }
@@ -135,13 +134,14 @@ rezalt_collider cCollider::step (int count_, rezalt_collider rezalt_, double siz
 			return rezalt_;
 	}
 	
-	TVector3 speed;
-	TVector3 coordin_old;
-	TVector3 coordin_new;
+	cMyVector3 speed;
+	cMyVector3 coordin_old;
+	cMyVector3 coordin_new;
 	
 	double px, py, pz;
 	double x, y, z;
 	while (start_ && (errno == 10)) {
+	
 		for (int i = 0; i <= m_counter; i++) {
 			speed = m_part [i]->return_speed ();
 			px = size_of_step_ * speed.X ();
@@ -156,8 +156,10 @@ rezalt_collider cCollider::step (int count_, rezalt_collider rezalt_, double siz
 			coordin_new.SetXYZ (x, y, z);
 			m_part [i]->change_coordin (coordin_new);
 		} //end of for
+	
 		m_time++;
 		collision (rezalt_);
+	
 		if (m_time == time_to_collide_passid) {
 				start_ = false;
 				processing_error (time_to_collide_passid);

@@ -8,7 +8,7 @@
 class cCollider {
 	
 		public:
-			cCollider (int N_, part_param param_, int pointer_ = 0);
+			cCollider (int N_, part_param *param_, int pointer_ = 0);
 			//cCollider (cParticle particle_);
 			~cCollider ();
 			bool show ();

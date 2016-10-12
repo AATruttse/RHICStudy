@@ -1,7 +1,10 @@
 #ifndef cPARTICLE_H_
 #define cPARTICLE_H_
 
-#include <TVector3.h>
+
+
+#include "MyVector3.h"
+//class cMyVector3;
 
 class cParticle {
 	
@@ -12,22 +15,22 @@ class cParticle {
 		bool show 	();
 		bool Ok 		();
 	
-		TVector3 return_coordin ();
-		TVector3 return_speed ();
+		cMyVector3 return_coordin ();
+		cMyVector3 return_speed ();
 		double 	 return_mass ();
 		double   return_radii ();
 		
-		void change_coordin (TVector3 new_coordin);
-		void change_speed 	(TVector3 new_speed);
+		void change_coordin (cMyVector3 new_coordin);
+		void change_speed 	(cMyVector3 new_speed);
 		void change_radii 	(double new_radii);
 		void change_mass 		(double new_mass);
 	
 	private:
 	
-		TVector3 m_coordin;
+		cMyVector3 m_coordin;
 		double m_mass;
 		double m_radii;
-		TVector3 m_speed;
+		cMyVector3 m_speed;
 
 
 };
